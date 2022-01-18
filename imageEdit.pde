@@ -1,17 +1,26 @@
 PImage img;
 File se;
 boolean a = false;
+PGraphics pg;
 
 void setup(){
   size(400,400,P2D);
+  pg = createGraphics(400, 400);
 }
 
 void draw(){
   if(img != null){
-    image(img,0,0);
-  }
+    image(img, 0,0);
+    noStroke();
+    ellipse(mouseX, mouseY, 60, 60);
+    pg.beginDraw();
+    pg.stroke(255);
+    pg.ellipse(mouseX, mouseY, 60, 60);
+    pg.endDraw();    
+    image(pg, 0, 0); 
+    }
   if(a){
-    save(se.getAbsolutePath()+".png");
+    pg.save(se.getAbsolutePath()+".png");
     a=false;
   }
 }
@@ -53,9 +62,3 @@ void fileSave(File selection){
   }
 }
 
-void startPage(){
-  textSize(40);
-  fill(255);
-  text("Choose a picture", 30, 200);
-  rect(150, 250, 100, 50);
-}

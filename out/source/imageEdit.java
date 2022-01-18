@@ -15,58 +15,70 @@ import java.io.IOException;
 public class imageEdit extends PApplet {
 
 PImage img;
-boolean startP = true;
+File se;
+boolean a = false;
+PGraphics pg;
 
-public void setup() {
+public void setup(){
   
-  startPage();
+  pg = createGraphics(400, 400);
 }
 
-public void draw() {
-  if (! startP){
-    image(img,0,0);
+public void draw(){
+  if(img != null){
+    image(img, 0,0);
+  
+    noStroke();
+    ellipse(mouseX, mouseY, 60, 60);
+    pg.beginDraw();
+    pg.stroke(255);
+    pg.ellipse(mouseX, mouseY, 60, 60);
+    pg.endDraw();    
+    image(pg, 0, 0); 
+    }
+  if(a){
+    save(se.getAbsolutePath()+".png");
+    a=false;
   }
 }
 
-public void startPage(){
-  textSize(40);
-  fill(255);
-  text("Choose a picture", 30, 200);
-  rect(150, 250, 100, 50);
-}
-
-public void mouseClicked(){
-  if(startP){
-    if (150<mouseX&&mouseX<250&&250<mouseY&&mouseY<300){
-      selectInput("Select a picture to process:", "fileSelected");
-    }
-  }else{
-    //save button
-    saveImage();
+public void keyPressed(){
+  if(keyCode == UP){
+     selectInput("Select a picture to process:", "fileSelected");
+  }
+  if(keyCode == DOWN){
+     selectOutput("Select a picture to save:", "fileSave");
   }
 }
 
 public void fileSelected(File selection) {
-  String type="null";
   if (selection == null) {
     println("Window was closed or the user hit cancel.");
   }
   else {
-    try {
+    try{
       img = loadImage(selection.getAbsolutePath());
-    } catch (Exception e) {
-      println("in");
-      println("Please choose jpg, png");
-      println(e);
+    }catch(Exception e){
     }
-    //image(img,0,0);
-    startP = false;
+    finally{
+      if (img == null){
+    println("out");
+        selectInput("Select a picture to process:", "fileSelected");
+      }
+    }
   }
 }
 
-public void saveImage(){
-  save("xxx.png");
+public void fileSave(File selection){
+  if (selection == null) {
+    println("Window was closed or the user hit cancel.");
+  }
+  else {
+    se = selection;
+    a=true;
+  }
 }
+
   public void settings() {  size(400,400,P2D); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "imageEdit" };
