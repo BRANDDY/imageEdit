@@ -7,6 +7,9 @@ void setup() {
 }
 
 void draw() {
+  if (! startP){
+    image(img,0,0);
+  }
 }
 
 void startPage(){
@@ -33,20 +36,16 @@ void fileSelected(File selection) {
     println("Window was closed or the user hit cancel.");
   }
   else {
-    int i = selection.getName().indexOf(".");
-    if (i>0){
-      type = selection.getName().substring(i+1);
-    }
-    if(type == "jpg"||type == "png"){
-      img = loadImage(selection.getName());
-      image(img,0,0);
-      startP = false;
+    try {
+      img = loadImage(selection.getAbsolutePath());
+    } catch (Exception e) {
       println("in");
-    }else{
       println("Please choose jpg, png");
+      println(e);
     }
+    //image(img,0,0);
+    startP = false;
   }
-  println(type);
 }
 
 void saveImage(){
